@@ -1,0 +1,98 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Planning Presentation v1</title><link rel="stylesheet" href="/style.css"></head>
+<body><div id="hdr"></div><main>
+<p class="mut"><span class="tag">Planning Presentation v1</span> Version 1.0 · November 2026 · <span id="authors"></span> · Revisions will be published at <code>/planning/v2/</code>; v1 stays here.</p>
+<div class="deck"><nav class="toc" id="toc"></nav><div>
+<section class="slide" data-t="Title"><h2>EVFlow: Planning Presentation</h2><p style="font-size:20px">Fair, uncertainty-aware scheduling across every charger on site.</p>
+<p class="mut" id="meta"></p></section>
+
+<section class="slide" data-t="Problem"><h2>The problem</h2><ul>
+<li>Sites with many EV chargers (campus, office, depot) share a limited power supply.</li>
+<li>First-come-first-served charging creates queues and unfair access.</li>
+<li>Uncoordinated charging causes demand peaks and higher electricity cost.</li>
+<li>Arrival times, departure times and energy needs are uncertain, so static plans fail.</li></ul></section>
+
+<section class="slide" data-t="Vision & goals"><h2>Vision and goals</h2><ul>
+<li><b>Fairness:</b> every driver receives a guaranteed share of energy before departure.</li>
+<li><b>Uncertainty-awareness:</b> plans use ranges and confidence, and adapt as things change.</li>
+<li><b>Site-wide control:</b> one schedule across all chargers within the power limit.</li>
+<li><b>Transparency:</b> drivers and operators can see why a schedule was chosen.</li></ul></section>
+
+<section class="slide" data-t="Stakeholders"><h2>Stakeholders and users</h2>
+<div class="grid"><div class="card"><h3>Drivers</h3><p class="mut">Book a slot, see charging status and expected completion.</p></div>
+<div class="card"><h3>Site operator</h3><p class="mut">Monitors load, chargers and fairness reports.</p></div>
+<div class="card"><h3>Facility admin</h3><p class="mut">Configures power limits, charger inventory and policies.</p></div></div></section>
+
+<section class="slide" data-t="Scope"><h2>Scope</h2><div class="grid">
+<div class="card"><h3>In scope</h3><ul><li>Driver and operator web app</li><li>REST API and database</li><li>Scheduling engine (fairness + uncertainty)</li><li>Charger simulator for testing</li><li>Reports and dashboards</li></ul></div>
+<div class="card"><h3>Out of scope (v1)</h3><ul><li>Payments and billing</li><li>Real hardware integration</li><li>Native mobile apps</li><li>Multi-site federation</li></ul></div></div></section>
+
+<section class="slide" data-t="Requirements"><h2>Requirements</h2><div class="scroll"><table><tr><th>ID</th><th>Requirement</th><th>Type</th></tr>
+<tr><td>FR1</td><td>Drivers can submit a charging request (energy, deadline)</td><td>Functional</td></tr>
+<tr><td>FR2</td><td>System produces a site-wide schedule within the power limit</td><td>Functional</td></tr>
+<tr><td>FR3</td><td>Schedule re-plans when arrivals or departures change</td><td>Functional</td></tr>
+<tr><td>FR4</td><td>Operators view live load, queue and fairness metrics</td><td>Functional</td></tr>
+<tr><td>NFR1</td><td>Re-planning completes in under 2 seconds for 100 chargers</td><td>Performance</td></tr>
+<tr><td>NFR2</td><td>Role-based access for driver, operator and admin</td><td>Security</td></tr>
+<tr><td>NFR3</td><td>Clear, accessible interface on desktop and mobile</td><td>Usability</td></tr></table></div></section>
+
+<section class="slide" data-t="Architecture"><h2>Proposed architecture</h2>
+<div class="flow"><div>Web frontend</div>→<div>REST API</div>→<div>Scheduling engine</div>→<div>Charger simulator</div></div>
+<p></p><div class="flow"><div>REST API</div>↔<div>Database</div></div>
+<ul style="margin-top:20px"><li>Frontend: driver and operator dashboards.</li><li>API: authentication, requests, schedules and reports.</li><li>Engine: computes plans and re-plans on events.</li><li>Delivery: GitHub repository with automatic deployment on every push.</li></ul></section>
+
+<section class="slide" data-t="Scheduling approach"><h2>Scheduling approach</h2><ul>
+<li><b>Fairness:</b> max-min fair allocation of power, weighted by remaining energy and deadline.</li>
+<li><b>Uncertainty:</b> departure and energy need are modelled as ranges with confidence levels.</li>
+<li><b>Robustness:</b> plan against the likely case and keep reserve capacity for surprises.</li>
+<li><b>Re-planning:</b> rolling horizon, re-solved at fixed intervals and on every event.</li>
+<li><b>Evaluation:</b> compare against first-come-first-served on fairness, wait time and peak load.</li></ul></section>
+
+<section class="slide" data-t="Process"><h2>Process and tools</h2><ul>
+<li>Agile (Scrum-style) with two-week sprints and a short review at the end of each.</li>
+<li>GitHub Issues and Projects board for backlog and sprint tracking.</li>
+<li>Feature branches, pull requests and peer review before merge to <code>main</code>.</li>
+<li>Automatic deployment to Cloudflare Pages from <code>main</code>; every release is tagged.</li>
+<li>Testing: unit tests for the engine, API tests and a manual acceptance checklist.</li></ul></section>
+
+<section class="slide" data-t="Timeline"><h2>Timeline and milestones</h2><div class="scroll"><table><tr><th>Phase</th><th>Outcome</th></tr>
+<tr><td>Sprint 1: Planning</td><td>Requirements, architecture, team site live, Planning v1</td></tr>
+<tr><td>Sprint 2: Foundation</td><td>Database, API skeleton, frontend shell, simulator</td></tr>
+<tr><td>Sprint 3: Core engine</td><td>Baseline scheduler and fairness policy</td></tr>
+<tr><td>Sprint 4: Uncertainty</td><td>Probabilistic model and re-planning loop</td></tr>
+<tr><td>Sprint 5: Integration</td><td>Dashboards, reports, end-to-end testing</td></tr>
+<tr><td>Sprint 6: Release</td><td>Evaluation, documentation, final demo</td></tr></table></div></section>
+
+<section class="slide" data-t="Risks"><h2>Risks and mitigation</h2><div class="scroll"><table><tr><th>Risk</th><th>Impact</th><th>Mitigation</th></tr>
+<tr><td>Scheduling model too complex</td><td>High</td><td>Ship a simple baseline first, add uncertainty incrementally</td></tr>
+<tr><td>No real charger data</td><td>Medium</td><td>Build a simulator with realistic arrival patterns</td></tr>
+<tr><td>Integration delays</td><td>Medium</td><td>Agree API contract early; mock the engine</td></tr>
+<tr><td>Team availability</td><td>Medium</td><td>Weekly sync, shared board, small tasks</td></tr></table></div></section>
+
+<section class="slide" data-t="Team & roles"><h2>Team and roles</h2><div class="grid" id="roles"></div></section>
+
+<section class="slide" data-t="Next steps"><h2>Definition of done and next steps</h2><ul>
+<li>Site live with public pages, admin login and instructor upload.</li>
+<li>Planning v1 published; any revision goes to a new v2 page.</li>
+<li>Repository history matches the authors and version shown on the site.</li>
+<li><b>Next:</b> collect instructor feedback, then start Sprint 2.</li></ul></section>
+
+<div class="nav"><button class="btn alt" id="prev">← Previous</button><span class="mut" id="pos"></span><button class="btn" id="next">Next →</button></div>
+</div></div></main><div id="ftr"></div>
+<script src="/app.js"></script><script>
+boot().then(({site})=>{
+ const names=site.members.map(m=>m.name).join(', ');
+ $('#authors').textContent='Authors: '+names;
+ $('#meta').textContent=site.team+' · '+site.course+' ('+site.code+') · Instructor: '+site.instructor+' · '+names;
+ $('#roles').innerHTML=site.members.map(m=>`<div class="card"><h3>${esc(m.name)}</h3><span class="tag">${esc(m.role)}</span><p class="mut">${esc(m.bio)}</p></div>`).join('');
+ const S=[...document.querySelectorAll('.slide')];
+ $('#toc').innerHTML=S.map((s,i)=>`<a href="#${i+1}" data-i="${i}">${i+1}. ${esc(s.dataset.t)}</a>`).join('');
+ const go=n=>{n=Math.max(0,Math.min(S.length-1,n));S.forEach((s,i)=>s.classList.toggle('on',i===n));
+  document.querySelectorAll('.toc a').forEach((a,i)=>a.classList.toggle('on',i===n));$('#pos').textContent=(n+1)+' / '+S.length;
+  $('#prev').disabled=n===0;$('#next').disabled=n===S.length-1;if(location.hash!=='#'+(n+1))history.replaceState(null,'','#'+(n+1));return n};
+ let cur=go((parseInt(location.hash.slice(1))||1)-1);
+ $('#prev').onclick=()=>cur=go(cur-1);$('#next').onclick=()=>cur=go(cur+1);
+ $('#toc').onclick=e=>{const a=e.target.closest('a');if(a){e.preventDefault();cur=go(+a.dataset.i)}};
+ addEventListener('keydown',e=>{if(e.key==='ArrowRight')cur=go(cur+1);if(e.key==='ArrowLeft')cur=go(cur-1)});
+ addEventListener('hashchange',()=>cur=go((parseInt(location.hash.slice(1))||1)-1));
+});
+</script></body></html>

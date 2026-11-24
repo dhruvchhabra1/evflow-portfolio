@@ -1,0 +1,27 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Admin</title><link rel="stylesheet" href="/style.css"></head>
+<body><div id="hdr"></div><main><h1>Admin &amp; upload</h1><div id="msg"></div>
+<div id="login"><form class="f" id="lf"><label>Role<select name="role"><option value="instructor">Instructor</option><option value="admin">Team admin</option></select></label>
+<label>Password<input type="password" name="password" required></label><button class="btn">Log in</button></form></div>
+<div id="app" hidden><p>Signed in as <b id="who"></b> <button class="btn alt sm" id="out">Log out</button></p>
+<h2>Upload a file</h2>
+<form class="f" id="uf"><label>Add as<select name="doc_id" id="docsel"><option value="">New document</option></select></label>
+<label>Title (new documents)<input name="title"></label>
+<label>Category<select name="category"><option>Planning</option><option>Presentations</option><option>Reports</option><option>Images</option><option>Instructor Feedback</option><option>Other</option></select></label>
+<label>Description<textarea name="description" rows="2"></textarea></label>
+<label>File (max 25 MB)<input type="file" name="file" required></label><button class="btn">Upload &amp; publish</button></form>
+<h2 style="margin-top:32px">All documents</h2><div class="scroll" id="tbl"></div></div></main><div id="ftr"></div>
+<script src="/app.js"></script><script>boot();
+const msg=(t,k='ok')=>$('#msg').innerHTML=t?`<div class="msg ${k}">${esc(t)}</div>`:'';
+let role=null;
+async function api(u,o){const r=await fetch(u,o);const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.error||r.status);return j}
+async function load(){const me=await api('/api/me');role=me.role;$('#login').hidden=!!role;$('#app').hidden=!role;if(!role)return;
+ $('#who').textContent=role;const {documents}=await api('/api/documents');
+ $('#docsel').innerHTML='<option value="">New document</option>'+documents.map(d=>`<option value="${d.id}">New version of: ${esc(d.title)}</option>`).join('');
+ $('#tbl').innerHTML='<table><tr><th>Title</th><th>Category</th><th>Versions</th>'+(role==='admin'?'<th>Actions</th>':'')+'</tr>'+documents.map(d=>`<tr><td>${esc(d.title)}</td><td>${esc(d.category)}</td><td>${d.versions.map(v=>`<div><a href="/api/files/${v.id}" target="_blank">v${v.version}</a> ${esc(v.uploaded_by)} ${v.published?'':'<span class="tag">hidden</span>'} ${role==='admin'?`<button class="btn alt sm" data-pub="${v.id}" data-to="${v.published?0:1}">${v.published?'Unpublish':'Publish'}</button>`:''}</div>`).join('')}</td>${role==='admin'?`<td><button class="btn danger sm" data-del="${d.id}">Delete</button></td>`:''}</tr>`).join('')+'</table>'}
+$('#lf').onsubmit=async e=>{e.preventDefault();try{await api('/api/login',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(Object.fromEntries(new FormData(e.target)))});msg('');load()}catch(x){msg(x.message,'err')}};
+$('#out').onclick=async()=>{await api('/api/logout',{method:'POST'});load()};
+$('#uf').onsubmit=async e=>{e.preventDefault();msg('Uploading…');try{const r=await api('/api/documents',{method:'POST',body:new FormData(e.target)});msg('Uploaded and published as version '+r.version+'.');e.target.reset();load()}catch(x){msg(x.message,'err')}};
+$('#tbl').onclick=async e=>{const b=e.target.closest('button');if(!b)return;try{
+ if(b.dataset.pub)await api('/api/versions/'+b.dataset.pub,{method:'PATCH',headers:{'content-type':'application/json'},body:JSON.stringify({published:+b.dataset.to})});
+ if(b.dataset.del&&confirm('Delete this document and all versions?'))await api('/api/documents/'+b.dataset.del,{method:'DELETE'});load()}catch(x){msg(x.message,'err')}};
+load()</script></body></html>

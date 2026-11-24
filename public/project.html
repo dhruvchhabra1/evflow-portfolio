@@ -1,0 +1,13 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Project</title><link rel="stylesheet" href="/style.css"></head>
+<body><div id="hdr"></div><main><h1>About EVFlow</h1>
+<p>EVFlow is a scheduling system for sites with many electric-vehicle chargers, such as campuses, offices and fleet depots. It decides which vehicle charges, when and at what power, so every driver is treated fairly even when arrival and departure times are uncertain.</p>
+<div class="grid">
+<div class="card"><h3>The problem</h3><p class="mut">First-come-first-served charging causes queues, unfair access, and demand peaks that exceed the site's power limit.</p></div>
+<div class="card"><h3>Fair</h3><p class="mut">Every driver gets a guaranteed share of energy before their stated departure time, using a max-min fairness policy.</p></div>
+<div class="card"><h3>Uncertainty-aware</h3><p class="mut">Departure times and energy needs are treated as ranges with confidence, and the schedule is re-planned as reality changes.</p></div>
+<div class="card"><h3>Site-wide</h3><p class="mut">One plan covers every charger and respects the total grid or transformer capacity.</p></div>
+</div>
+<h2 style="margin-top:32px">Main features</h2>
+<ul><li>Driver booking and live charging status</li><li>Operator dashboard with charger and load overview</li><li>Scheduling engine with fairness and uncertainty handling</li><li>Reports on energy delivered, waiting time and fairness</li></ul>
+<p><a class="btn" href="/planning/v1/">Read the Planning Presentation v1</a></p></main><div id="ftr"></div>
+<script src="/app.js"></script><script>boot()</script></body></html>

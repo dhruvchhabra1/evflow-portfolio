@@ -1,0 +1,15 @@
+{
+  "project": "EVFlow",
+  "tagline": "Fair, uncertainty-aware scheduling across every charger on site.",
+  "team": "Team Alpha",
+  "course": "Software Engineering",
+  "code": "UCS503",
+  "instructor": "Sukhpal Singh",
+  "repo": "dhruvchhabra1/evflow-portfolio",
+  "members": [
+    { "name": "Dhruv Chhabra", "roll": "1024170085", "github": "dhruvchhabra1", "role": "Project Manager & Full-Stack Lead", "bio": "Coordinates sprints, owns the system architecture and integrates the frontend with the API." },
+    { "name": "Aditya Gupta", "roll": "1024170204", "github": "codeX-maxui", "role": "Backend & Scheduling Algorithm Engineer", "bio": "Designs the scheduling engine, fairness policy and the uncertainty model behind EVFlow." },
+    { "name": "Puneet Singh", "roll": "1024170066", "github": "poplous", "role": "Frontend & UX Developer", "bio": "Builds the driver and operator dashboards and keeps the interface clear and accessible." },
+    { "name": "Kunal Gupta", "roll": "1024170064", "github": "kunal-1301", "role": "QA, Testing & Documentation Lead", "bio": "Owns the test plan, CI checks, requirements traceability and project documentation." }
+  ]
+}

@@ -1,0 +1,13 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Documents</title><link rel="stylesheet" href="/style.css"></head>
+<body><div id="hdr"></div><main><h1>Documents</h1><p class="mut">Decks, PDFs, images and other files. Each upload keeps its full version history.</p><div id="list">Loading…</div></main><div id="ftr"></div>
+<script src="/app.js"></script><script>boot();
+const sz=n=>n>1048576?(n/1048576).toFixed(1)+' MB':Math.max(1,Math.round(n/1024))+' KB';
+getJSON('/api/documents').then(({documents})=>{
+ const shown=documents.filter(d=>d.versions.some(v=>v.published));
+ if(!shown.length){$('#list').innerHTML='<div class="card">No documents published yet.</div>';return}
+ const by={};shown.forEach(d=>(by[d.category]??=[]).push(d));
+ $('#list').innerHTML=Object.entries(by).map(([cat,ds])=>`<h2>${esc(cat)}</h2><div class="grid">`+ds.map(d=>{const pub=d.versions.filter(x=>x.published),v=pub[0];
+  return `<div class="card"><h3>${esc(d.title)}</h3><span class="tag">v${v.version}</span> <span class="mut">${esc(v.filename)} · ${sz(v.size)}</span><p>${esc(d.description)}</p>
+  <a class="btn sm" href="/api/files/${v.id}" target="_blank">Open latest</a>
+  <details><summary class="mut">All versions</summary>${pub.map(x=>`<div><a href="/api/files/${x.id}" target="_blank">v${x.version}</a> <span class="mut">${esc(x.created_at.slice(0,10))} · ${esc(x.uploaded_by)}</span></div>`).join('')}</details></div>`}).join('')+'</div>').join('')
+}).catch(()=>$('#list').innerHTML='<div class="msg err">Could not load documents.</div>')</script></body></html>

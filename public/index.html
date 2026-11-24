@@ -1,0 +1,11 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Home</title><link rel="stylesheet" href="/style.css"></head>
+<body><div id="hdr"></div><main>
+<section class="hero"><span class="tag" id="tag"></span><h1 id="h"></h1><p id="p"></p>
+<a class="btn" href="/planning/v1/">View Planning Presentation v1</a> <a class="btn alt" href="/documents.html">Browse documents</a></section>
+<div class="grid">
+<a class="card" href="/team.html" style="text-decoration:none;color:inherit"><h3>Team</h3><p class="mut">Meet the four members, their roles and the live commit history.</p></a>
+<a class="card" href="/project.html" style="text-decoration:none;color:inherit"><h3>Project</h3><p class="mut">What EVFlow is, who it serves and how it works.</p></a>
+<a class="card" href="/planning/v1/" style="text-decoration:none;color:inherit"><h3>Planning v1</h3><p class="mut">The navigable planning presentation. Revisions will appear as v2.</p></a>
+<a class="card" href="/documents.html" style="text-decoration:none;color:inherit"><h3>Documents</h3><p class="mut">Decks, PDFs, images and folders uploaded by the team and instructor.</p></a>
+</div></main><div id="ftr"></div>
+<script src="/app.js"></script><script>boot().then(({site})=>{$('#tag').textContent=site.course+' · '+site.code+' · '+site.team;$('#h').textContent=site.project;$('#p').textContent=site.tagline})</script></body></html>

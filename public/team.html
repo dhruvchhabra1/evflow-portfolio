@@ -1,0 +1,9 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Team</title><link rel="stylesheet" href="/style.css"></head>
+<body><div id="hdr"></div><main><h1>Team Alpha</h1><p class="mut" id="sub"></p><div class="grid" id="m"></div>
+<h2 style="margin-top:36px">Repository history</h2><p class="mut">Live from GitHub, so it always matches the authors and versions of this site.</p><div class="card" id="c">Loading…</div></main><div id="ftr"></div>
+<script src="/app.js"></script><script>boot().then(async({site})=>{
+$('#sub').textContent=site.course+' ('+site.code+') · Instructor: '+site.instructor;
+$('#m').innerHTML=site.members.map(m=>`<div class="card"><h3>${esc(m.name)}</h3><span class="tag">${esc(m.role)}</span><p>${esc(m.bio)}</p><p class="mut">Roll no. ${esc(m.roll)}<br><a href="https://github.com/${esc(m.github)}">@${esc(m.github)}</a></p></div>`).join('');
+try{const r=await getJSON('https://api.github.com/repos/'+site.repo+'/commits?per_page=20');
+$('#c').innerHTML=r.map(c=>`<div class="commit"><a href="${esc(c.html_url)}"><code>${esc(c.sha.slice(0,7))}</code></a><span>${esc(c.commit.message.split('\n')[0])}</span><span class="mut">${esc(c.commit.author.name)} · ${esc(c.commit.author.date.slice(0,10))}</span></div>`).join('')||'No commits yet.'}
+catch{$('#c').innerHTML='Commit history unavailable. <a href="https://github.com/'+site.repo+'/commits">Open it on GitHub</a>.'}})</script></body></html>
